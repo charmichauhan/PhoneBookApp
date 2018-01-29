@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 class EditableCell extends React.Component {
     render() {
+        debugger
         return (
             <td>
                 <input type='text' name={this.props.cellData.type} id={this.props.cellData.id}

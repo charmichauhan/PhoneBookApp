@@ -7,6 +7,8 @@ class PersonRow extends React.Component {
     }
 
     render() {
+        debugger
+        console.log('this.props.person',this.props.person)
         return (
             <tr className="eachRow">
                 <EditableCell onPersonTableUpdate={this.props.onPersonTableUpdate} cellData={{

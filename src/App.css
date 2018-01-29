@@ -63,3 +63,7 @@
   border: 1px solid #ddd;
   padding: 5px 5px;
 }
+.cellContainer {
+  width: 25%;
+  float: left;
+}
