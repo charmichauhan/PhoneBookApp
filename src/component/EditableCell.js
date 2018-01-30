@@ -5,7 +5,7 @@ class EditableCell extends React.Component {
         debugger
         return (
             <td>
-                <input type='text' name={this.props.cellData.type} id={this.props.cellData.id}
+                <input type='text || number' name={this.props.cellData.type} id={this.props.cellData.id}
                        value={this.props.cellData.value} onChange={this.props.onPersonTableUpdate}/>
             </td>
         );
