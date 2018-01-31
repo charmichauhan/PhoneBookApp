@@ -285,33 +285,40 @@ class Persons extends React.Component {
                 <div>
                     <button type="button" onClick={this.onRowAdd}
                             className="btn btn-primary pull-right" style={{marginRight:'200px'}}>Add</button>
-                    <br/><br/>
                     <table id="customers">
                         <tr style={{border:'1px solid #ddd'}}>
                             <td>
-                            <a onClick={()=>this._sortRowsBy('firstName')}><th>{'First Name' + (this.state.sortBy === 'firstName' ? sortDirArrow : '')}</th></a>
-                            <a onClick={()=>this._sortRowsBy('lastName')}><th>{'Last Name' + (this.state.sortBy === 'lastName' ? sortDirArrow : '')}</th></a>
-                            <a onClick={()=>this._sortRowsBy('DOB')}><th>{'DOB' + (this.state.sortBy === 'DOB' ? sortDirArrow : '')}</th></a>
-                            <a onClick={()=>this._sortRowsBy('PhoneNumber')}><th>{'Phone Number' + (this.state.sortBy === 'PhoneNumber' ? sortDirArrow : '')}</th></a>
+                                <a onClick={()=>this._sortRowsBy('firstName')}><th>{'First Name' + (this.state.sortBy === 'firstName' ? sortDirArrow : '')}</th></a>
+                            </td>
+                            <td>
+                                <a onClick={()=>this._sortRowsBy('lastName')}><th>{'Last Name' + (this.state.sortBy === 'lastName' ? sortDirArrow : '')}</th></a>
+                            </td>
+                            <td>
+                                <a onClick={()=>this._sortRowsBy('DOB')}><th>{'DOB' + (this.state.sortBy === 'DOB' ? sortDirArrow : '')}</th></a>
+                            </td>
+                            <td>
+                                <a onClick={()=>this._sortRowsBy('PhoneNumber')}><th>{'Phone Number' + (this.state.sortBy === 'PhoneNumber' ? sortDirArrow : '')}</th></a>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <input className="cellContainer" type="text" placeholder="Search firstName..." value={this.state.filterText}
+                                <input type="text" placeholder="Search firstName..." value={this.state.filterText}
                                        ref="filterInput" onChange={this.handleChange.bind(this)}/>
-                                <input className="cellContainer" type="text" placeholder="Search lastName..." value={this.state.filterlastName}
+                            </td>
+                            <td>
+                                <input type="text" placeholder="Search lastName..." value={this.state.filterlastName}
                                        ref="filterLNInput" onChange={this.changeFilterlName.bind(this)}/>
-                                <input className="cellContainer" type="number" placeholder="Search DOB..." value={this.state.filterDOB}
+                            </td>
+                            <td>
+                                <input type="number" placeholder="Search DOB..." value={this.state.filterDOB}
                                        ref="filterDOBInput" onChange={this.changeFilterDOB.bind(this)}/>
-                                <input className="cellContainer" type="number" placeholder="Search PhoneNumber..." value={this.state.filterPhoneNumber}
+                            </td>
+                            <td>
+                                <input type="number" placeholder="Search PhoneNumber..." value={this.state.filterPhoneNumber}
                                        ref="filterPNInput" onChange={this.changeFilterPhone.bind(this)}/>
                             </td>
                         </tr>
-                        <tr>
-                            <td>
-                                {person}
-                            </td>
-                        </tr>
+                        {person}
                     </table>
                 </div>
             </div>

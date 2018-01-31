@@ -5,10 +5,8 @@ class PersonRow extends React.Component {
     onDelEvent() {
         this.props.onDelEvent(this.props.person);
     }
-
     render() {
         debugger
-        console.log('this.props.person',this.props.person)
         return (
             <tr className="eachRow">
                 <EditableCell onPersonTableUpdate={this.props.onPersonTableUpdate} cellData={{

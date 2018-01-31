@@ -13,7 +13,7 @@ class EditableCell extends React.Component {
         if(this.props.cellData.value === '')
         {
             formIsValid = false;
-            this.props.cellData.value = 'Field cannot be empty'
+            // this.props.cellData.value = 'Field cannot be empty'
         }
         if(this.props.cellData.type === 'PhoneNumber'){
             if(!this.props.cellData.value.match(/^[789]\d{9}$/)){
