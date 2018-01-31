@@ -93,7 +93,6 @@ class Persons extends React.Component {
             ],
             sortBy: null,
             sortDir: null,
-            // myData: JSON.parse(localStorage.getItem('myData'))
         }
         this.onPersonTableUpdate=this.handlePersonTable.bind(this);
         this.onRowAdd=this.handleAddEvent.bind(this);
@@ -111,11 +110,11 @@ class Persons extends React.Component {
     // componentDidMount() {
     //     this.setState({persons: JSON.parse(localStorage.getItem("myData"))});
     // }
-    componentWillMount() {
+    // componentWillMount() {
         // localStorage.getItem(JSON.stringify('myData'));
-        console.log('this==',this)
-        this.setState({this:localStorage.getItem(JSON.stringify('myData'))})
-    }
+        // console.log('this==',this)
+        // this.setState({this:localStorage.getItem(JSON.stringify('myData'))})
+    // }
     handleUserInput(filterText) {
         this.setState({filterText: filterText});
     }
@@ -132,12 +131,18 @@ class Persons extends React.Component {
         debugger;
         // this.props.deleteData();
         var item = JSON.parse(localStorage.getItem('myData'))
-        console.log('item',item)
-        var index = item.persons.indexOf(person);
-        item.persons.splice(index, 1);
-        // this.setState(this.state);
-        // console.log(this.state.persons)
-        // this.setState({allData: JSON.parse(localStorage.getItem('myData'))})
+        console.log('item',item);
+        var index = -1;
+        var clength = item.persons.length;
+        for( var i = 0; i < clength; i++ ) {
+            if(  item.persons[i].id === person.id ) {
+                index = i;
+                break;
+            }
+        }
+        item.persons.splice( index, 1 );
+        this.setState( item );
+        console.log('item-del',item)
         localStorage.setItem('myData', JSON.stringify(item));
     };
     handleAddEvent() {
@@ -199,13 +204,13 @@ class Persons extends React.Component {
         console.log('sortDir',sortDir)
         var sortBy = cellDataKey;
         console.log('sortBy',sortBy)
+        var data = JSON.parse(localStorage.getItem('myData'))
         if (sortBy === this.state.sortBy) {
             sortDir = this.state.sortDir === 'ASC' ? 'DESC' : 'ASC';
         }
         else {
             sortDir = 'DESC';
         }
-        var data = JSON.parse(localStorage.getItem('myData'))
         console.log('data',data)
         var rows = data.persons.slice();
         var rows1 = rows.sort(function(a, b){
@@ -223,32 +228,47 @@ class Persons extends React.Component {
             }
             return sortVal;
         });
-        console.log('rows1', rows1)
         self.setState({
             persons : rows1,
             sortBy,
             sortDir
         });
         data.persons=rows1;
-        console.log('data.persons', data.persons);
-        console.log('data', data);
-        localStorage.setItem('myData', JSON.stringify(data))
+        localStorage.setItem('myData', JSON.stringify(data));
+        let sortedDOB;
+        if(sortBy === 'DOB'){
+            debugger
+            if (sortDir === 'ASC') {
+                sortedDOB = rows.sort((a, b) => Date.parse(new Date(a.DOB.split("/").reverse().join("-"))) - Date.parse(new Date(b.DOB.split("/").reverse().join("-"))));
+                console.log('sortedDOB', sortedDOB)
+            }
+            else{
+                sortedDOB = rows.sort((a, b) => Date.parse(new Date(a.DOB.split("/").reverse().join("-"))) - Date.parse(new Date(b.DOB.split("/").reverse().join("-")))).reverse();
+                console.log('sortedDOB', sortedDOB)
+            }
+        }
+        self.setState({
+            persons : sortedDOB,
+            sortBy,
+            sortDir
+        });
+        data.persons=sortedDOB;
+        localStorage.setItem('myData', JSON.stringify(data));
     };
 
     render() {
-        // localStorage.clear()
         var data = JSON.parse(localStorage.getItem('myData'))
         localStorage.setItem('myData', JSON.stringify(data));
         var onPersonTableUpdate = this.onPersonTableUpdate;
         var rowDel = this.onRowDel;
         const self = this;
-        debugger
         var item = JSON.parse(localStorage.getItem('myData'));
         var person = item.persons.map(function(person) {
-            if ( ( person.firstName.indexOf(self.state.filterText) || person.lastName.indexOf(self.state.filterlastName)
-                || person.DOB.indexOf(self.state.filterDOB) || person.PhoneNumber.indexOf(self.state.filterPhoneNumber))  === -1)
+            if ( ( person.firstName.toLowerCase().indexOf(self.state.filterText.toLowerCase()) ||
+                    person.lastName.toLowerCase().indexOf(self.state.filterlastName.toLowerCase()) ||
+                    person.DOB.toLowerCase().indexOf(self.state.filterDOB.toLowerCase()) ||
+                    person.PhoneNumber.toLowerCase().indexOf(self.state.filterPhoneNumber.toLowerCase())) === -1)
             {return}
-
             else return (<PersonRow onPersonTableUpdate={onPersonTableUpdate} person={person} onDelEvent={rowDel.bind(this)} key={person.id}/>)
         });
 
@@ -263,15 +283,17 @@ class Persons extends React.Component {
                 <h2>PhoneBook Application</h2>
 
                 <div>
-                    <button type="button" onClick={this.onRowAdd} className="btn btn-success pull-right">Add</button>
+                    <button type="button" onClick={this.onRowAdd}
+                            className="btn btn-primary pull-right" style={{marginRight:'200px'}}>Add</button>
                     <br/><br/>
                     <table id="customers">
-
-                        <tr>
+                        <tr style={{border:'1px solid #ddd'}}>
+                            <td>
                             <a onClick={()=>this._sortRowsBy('firstName')}><th>{'First Name' + (this.state.sortBy === 'firstName' ? sortDirArrow : '')}</th></a>
                             <a onClick={()=>this._sortRowsBy('lastName')}><th>{'Last Name' + (this.state.sortBy === 'lastName' ? sortDirArrow : '')}</th></a>
                             <a onClick={()=>this._sortRowsBy('DOB')}><th>{'DOB' + (this.state.sortBy === 'DOB' ? sortDirArrow : '')}</th></a>
                             <a onClick={()=>this._sortRowsBy('PhoneNumber')}><th>{'Phone Number' + (this.state.sortBy === 'PhoneNumber' ? sortDirArrow : '')}</th></a>
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -279,9 +301,9 @@ class Persons extends React.Component {
                                        ref="filterInput" onChange={this.handleChange.bind(this)}/>
                                 <input className="cellContainer" type="text" placeholder="Search lastName..." value={this.state.filterlastName}
                                        ref="filterLNInput" onChange={this.changeFilterlName.bind(this)}/>
-                                <input className="cellContainer" type="date" placeholder="Search DOB..." value={this.state.filterDOB}
+                                <input className="cellContainer" type="number" placeholder="Search DOB..." value={this.state.filterDOB}
                                        ref="filterDOBInput" onChange={this.changeFilterDOB.bind(this)}/>
-                                <input className="cellContainer" type="number" placeholder="Search PhoneNumber..." value={this.state.filterPhoneNumber} pattern="^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$"
+                                <input className="cellContainer" type="number" placeholder="Search PhoneNumber..." value={this.state.filterPhoneNumber}
                                        ref="filterPNInput" onChange={this.changeFilterPhone.bind(this)}/>
                             </td>
                         </tr>
@@ -297,15 +319,15 @@ class Persons extends React.Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {
-        data: state.data,
-        currentData: state.currentData
-    };
-}
+// function mapStateToProps(state) {
+//     return {
+//         data: state.data,
+//         currentData: state.currentData
+//     };
+// }
+// function mapDispatchToProps(dispatch) {
+//     return bindActionCreators({updateData, addData, deleteData, allData}, dispatch);
+// }
+// export default connect(mapStateToProps, mapDispatchToProps)(Persons);
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({updateData, addData, deleteData, allData}, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Persons);
+export default Persons;
